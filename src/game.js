@@ -42,3 +42,9 @@ export function interact(s) {
   }
   return {message:'Follow the trail to a water cache or the summit campsite.'};
 }
+
+// Substeps preserve elapsed movement on slower rendering frames.
+export function updateFrame(state,input,dt){
+  for(let remaining=Math.min(.25,Math.max(0,dt));remaining>1e-8;remaining-=.05)
+    updateState(state,input,Math.min(.05,remaining));
+}

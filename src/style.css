@@ -5,3 +5,8 @@
 .playing .objectives,.playing .resources,.playing .map-card{background:#111914c7;border-color:#e6d5b230}
 .speed{position:relative;background:radial-gradient(circle,#131b19d9 55%,#232b26d9 56%);box-shadow:0 0 0 5px #9b9f9633,inset 0 0 16px #0008}
 .speed:before{content:'';position:absolute;inset:5px;border-radius:50%;background:repeating-conic-gradient(from 225deg,#e3dfcd 0deg 1deg,transparent 1deg 30deg);mask:radial-gradient(circle,transparent 61%,#000 63%);pointer-events:none}
+#touch-controls{bottom:240px;left:auto;right:40px;gap:6px;z-index:6}
+#touch-controls button{padding:12px 14px;font-size:11px;background:#14201ee6}
+#auto-drive{color:var(--yellow);border-color:var(--yellow)!important;min-width:72px}
+#auto-drive[aria-pressed="true"]{background:var(--yellow);color:#17221c}
+@media(max-width:650px){#touch-controls{bottom:190px;left:12px;right:12px;gap:5px}#touch-controls button{padding:13px 10px;font-size:10px}}
