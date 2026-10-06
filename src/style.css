@@ -10,3 +10,9 @@
 #auto-drive{color:var(--yellow);border-color:var(--yellow)!important;min-width:72px}
 #auto-drive[aria-pressed="true"]{background:var(--yellow);color:#17221c}
 @media(max-width:650px){#touch-controls{bottom:190px;left:12px;right:12px;gap:5px}#touch-controls button{padding:13px 10px;font-size:10px}}
+/* Keep the launch action above the footer at every screen height and zoom level. */
+#start{position:fixed;left:50%;bottom:36px;transform:translateX(-50%);z-index:12;min-width:260px;justify-content:center;box-shadow:0 8px 30px #0005;font-size:14px;padding:20px 28px}
+#start:hover{transform:translateX(-50%) translateY(-2px)}
+.intro-foot{display:none}
+@media(max-width:650px){#start{left:24px;right:24px;bottom:260px;transform:none;min-width:0}#start:hover{transform:translateY(-2px)}.intro .expedition-card{display:none}.intro{top:16%}}
+@media(max-height:550px){.intro{top:100px}.intro h1{font-size:48px;margin:12px 0}.intro p,.intro .expedition-card{display:none}#start{bottom:24px}}
