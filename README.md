@@ -14,7 +14,7 @@ npm run dev
 ## Controls
 
 - W / arrow up: accelerate
-- S / arrow down: reverse
+- S / arrow down: brake, then reverse
 - A / D or left / right arrows: steer
 - Space: brake
 - E: interact with water caches and camp when stopped
@@ -23,7 +23,7 @@ npm run dev
 - Escape: pause
 - R: restart
 
-Touch driving buttons appear on touch devices. Water caches have blue markers. Stop within 32 world meters of a cache and press E. All earlier objectives must be complete before camping. Fast driving outside the trail damages suspension; 4L protects it. The locker improves traction off the trail. Fuel depletion or vehicle damage ends the expedition.
+On-screen driving buttons are available on every device. DRIVE engages automatic throttle; STOP applies the brakes. Steering uses the vehicle heading, with speed-dependent steering and a camera that follows turns and looks behind while reversing. Tires rotate with actual travel, front wheels steer, and the body follows terrain slope. Water caches have blue markers. Stop within 32 world meters of a cache and press E. All earlier objectives must be complete before camping. Fast driving outside the trail damages suspension; 4L protects it. The locker improves traction off the trail. Fuel depletion or vehicle damage ends the expedition.
 
 ## Verify and deploy
 

@@ -8,3 +8,9 @@ test('low range protects suspension while fast offroad driving damages it',()=>{
 test('resource exhaustion stops driving',()=>{const s=createState();s.fuel=.001;s.speed=12;updateState(s,{w:true},.05);assert.equal(s.failed,true);assert.equal(s.speed,0);});
 
 test("slow render frames advance the same simulation time as fast frames",()=>{const slow=createState(),fast=createState();for(let i=0;i<20;i++)updateFrame(slow,{w:true},.25);for(let i=0;i<100;i++)updateFrame(fast,{w:true},.05);assert.ok(Math.abs(slow.z-fast.z)<1e-8);assert.ok(slow.z>20);assert.ok(Math.abs(slow.elapsed-5)<1e-8);});
+
+test('steering changes heading and movement follows the vehicle direction',()=>{const s=createState();s.speed=8;const heading=s.heading,x=s.x;for(let i=0;i<10;i++)updateState(s,{d:true,w:true},.05);assert.ok(s.heading>heading);assert.ok(s.x>x);assert.ok(s.steering>0);});
+test('wheels rotate from distance and reverse rotates them backwards',()=>{const s=createState();s.z=200;s.x=trailX(200);s.heading=0;s.speed=4;updateState(s,{},.05);assert.ok(s.wheelAngle>0);const angle=s.wheelAngle;s.speed=-4;updateState(s,{},.05);assert.ok(s.wheelAngle<angle);});
+test('reverse input brakes forward motion before engaging reverse',()=>{const s=createState();s.speed=8;updateState(s,{s:true},.05);assert.ok(s.speed>0&&s.speed<8);for(let i=0;i<50;i++)updateState(s,{s:true},.05);assert.ok(s.speed<0);});
+test('braking holds the vehicle without accelerating',()=>{const s=createState();for(let i=0;i<40;i++)updateState(s,{w:true,brake:true},.05);assert.equal(s.speed,0);assert.equal(s.wheelAngle,0);});
+test('reverse steering changes heading opposite to forward steering',()=>{const s=createState();s.z=200;s.x=trailX(200);s.heading=0;s.speed=-5;for(let i=0;i<10;i++)updateState(s,{d:true},.05);assert.ok(s.heading<0);});
