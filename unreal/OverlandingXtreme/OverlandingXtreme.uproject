@@ -1,0 +1,40 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.8",
+  "Category": "Games",
+  "Description": "Overlanding Xtreme: offroad vehicle prototype",
+  "Plugins": [
+    {
+      "Name": "GameInputWindows",
+      "Enabled": true,
+      "SupportedTargetPlatforms": [
+        "Win64"
+      ],
+      "TargetDenyList": [
+        "Server"
+      ]
+    },
+    {
+      "Name": "ModelingToolsEditorMode",
+      "Enabled": true,
+      "TargetAllowList": [
+        "Editor"
+      ]
+    },
+    {
+      "Name": "ChaosVehiclesPlugin",
+      "Enabled": true
+    },
+    {
+      "Name": "PixelStreaming2",
+      "Enabled": true
+    },
+    {
+      "Name": "PythonScriptPlugin",
+      "Enabled": true,
+      "TargetAllowList": [
+        "Editor"
+      ]
+    }
+  ]
+}

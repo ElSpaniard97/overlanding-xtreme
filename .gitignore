@@ -1,3 +1,13 @@
 node_modules/
 dist/
 .DS_Store
+
+/.tools/
+
+# Unreal generated files
+unreal/**/Binaries/
+unreal/**/Intermediate/
+unreal/**/Saved/
+unreal/**/DerivedDataCache/
+unreal/**/__pycache__/
+unreal/**/*.pyc
