@@ -1,6 +1,6 @@
 # Pause checkpoint — 2026-10-07
 
-Work paused at the user's request after saving the UE5 prototype to GitHub.
+Work resumed on 2026-10-08 at the user's request. GitHub checkpoint 72b5d01 and its Pages deployment were confirmed successful.
 
 ## Completed
 
@@ -21,4 +21,11 @@ Work paused at the user's request after saving the UE5 prototype to GitHub.
 - PixelStreaming2 is enabled and infrastructure tools are installed locally, but no working stream or packaged release exists. GitHub Pages still serves the separate browser prototype.
 - Generated map hand edits are replaced when rebuilding. Preserve custom level work separately.
 
-Do not resume implementation until the user asks to continue.
+## 2026-10-08 continuation
+
+- Replaced the 300 overlapping trail boxes with one continuous road ribbon (602 shared vertices, 600 upward-facing triangles) with complex-as-simple static collision. Canyon floor remains underneath.
+- Level now contains 864 actors. Imported road axes are checked before the map is replaced.
+- Generator now requires full editor execution with -ExecutePythonScript because the OBJ importer uses Slate. Commandlet mode crashes inside Epic's importer.
+- Added F10 RestartLevel binding for the standalone Development prototype; end-to-end reset remains unverified because preview focus changed during testing.
+- Corrected imported mesh coordinates after bounds and visual inspection showed the legacy OBJ importer uses Z-up and flips Y.
+- Corrected map loaded and was observed with the vehicle driving at 83 km/h on the continuous road. Full expedition traversal remains unverified.

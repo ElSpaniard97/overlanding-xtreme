@@ -2,21 +2,15 @@
 import unreal as u
 import json, math, random
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).parent))
+from trail_geometry import write_trail_obj
 ROOT = Path(u.Paths.project_dir()).resolve()
 route = json.loads((ROOT.parent / 'Migration/RedRockRun.json').read_text())
 rng = random.Random(97)
 assets = u.get_editor_subsystem(u.EditorAssetSubsystem)
 levels = u.get_editor_subsystem(u.LevelEditorSubsystem)
 actors = u.get_editor_subsystem(u.EditorActorSubsystem)
-map_path = '/Game/Overlanding/Maps/RedRockRun'
-if assets.does_asset_exist(map_path):
-    if not levels.load_level(map_path):
-        raise RuntimeError('Cannot load generated canyon map')
-    for old in actors.get_all_level_actors():
-        if not isinstance(old, u.WorldSettings):
-            actors.destroy_actor(old)
-elif not levels.new_level(map_path):
-    raise RuntimeError('Cannot create canyon map')
 cube = u.load_asset('/Game/Overlanding/Meshes/SM_CollisionCube')
 if not cube:
     cube = assets.duplicate_asset('/Engine/BasicShapes/Cube','/Game/Overlanding/Meshes/SM_CollisionCube')
@@ -57,13 +51,51 @@ def mesh(name, pos, scale, mat, shape=cube, rotation=None):
     return a
 
 points = route['trail_samples']
-# Overlapping tangent slabs provide collision along the complete exported route.
+source = ROOT / 'Intermediate' / 'GeneratedTrail.obj'
+source.parent.mkdir(parents=True, exist_ok=True)
+triangle_count = write_trail_obj(points, source)
+task = u.AssetImportTask()
+task.filename = str(source)
+task.destination_path = '/Game/Overlanding/Meshes'
+task.destination_name = 'SM_ContinuousTrail'
+task.automated = True
+task.replace_existing = True
+task.save = True
+options = u.FbxImportUI()
+options.import_mesh = True
+options.import_as_skeletal = False
+options.import_materials = False
+options.import_textures = False
+options.static_mesh_import_data.set_editor_property('auto_generate_collision', False)
+task.options = options
+task.factory = u.FbxFactory()
+u.AssetToolsHelpers.get_asset_tools().import_asset_tasks([task])
+trail_mesh = u.load_asset('/Game/Overlanding/Meshes/SM_ContinuousTrail')
+if not trail_mesh:
+    raise RuntimeError('Continuous trail import failed; existing level has not been changed')
+bounds = trail_mesh.get_bounds()
+if bounds.box_extent.z > 3000 or bounds.box_extent.y < 3000:
+    raise RuntimeError('Imported road axes do not match the route')
+body = trail_mesh.get_editor_property('body_setup')
+body.set_editor_property('collision_trace_flag', u.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE)
+assets.save_loaded_asset(trail_mesh)
+map_path = '/Game/Overlanding/Maps/RedRockRun'
+if assets.does_asset_exist(map_path):
+    if not levels.load_level(map_path):
+        raise RuntimeError('Cannot load generated canyon map')
+    for old in actors.get_all_level_actors():
+        if not isinstance(old, u.WorldSettings):
+            actors.destroy_actor(old)
+elif not levels.new_level(map_path):
+    raise RuntimeError('Cannot create canyon map')
+mesh('ContinuousTrail', (0,0,0), (1,1,1), sand, trail_mesh)
+points = route['trail_samples']
+# Canyon floor supports excursions outside the continuous road ribbon.
 for i, (p, q) in enumerate(zip(points, points[1:])):
     dx, dy, dz = (q[k] - p[k] for k in ('x_cm', 'y_cm', 'z_cm'))
     length = math.sqrt(dx*dx + dy*dy + dz*dz)
     yaw = math.degrees(math.atan2(dy, dx))
     pitch = math.degrees(math.atan2(dz, math.hypot(dx, dy)))
-    mesh('Trail_%03d' % i, ((p['x_cm']+q['x_cm'])/2, (p['y_cm']+q['y_cm'])/2, (p['z_cm']+q['z_cm'])/2-65), ((length+90)/100, 13, 1.3), sand, rotation=u.Rotator(pitch, yaw, 0))
     mesh('CanyonFloor_%03d' % i, ((p['x_cm']+q['x_cm'])/2, (p['y_cm']+q['y_cm'])/2, (p['z_cm']+q['z_cm'])/2-700), ((length+120)/100, 180, 12), rock, rotation=u.Rotator(pitch, yaw, 0))
     if i % 3 == 0:
         for side in (-1, 1):

@@ -21,3 +21,9 @@ In the standalone Development prototype, press **Esc** to quit the game and rele
 ## Cloning from GitHub
 
 Install Git LFS before cloning, or run `git lfs install` and `git lfs pull` after cloning. Unreal `.uasset` and `.umap` files are stored in LFS. Generated caches and local streaming infrastructure are excluded. Open OverlandingXtreme.uproject with UE5.8.3. The command launchers currently use the default macOS engine installation path; other installations can open the project directly in Unreal Editor.
+
+## Continuous trail update (2026-10-08)
+
+The canyon road now uses one continuous mesh instead of 300 overlapping boxes. Its 602 vertices and 600 triangles share boundaries, removing the stepped road seams. The broader canyon floor remains beneath it. F10 is assigned to restart the level in the standalone Development prototype; this reset still needs a full play-test. Esc remains the quit key.
+
+Run the terrain generator in the full editor with `-ExecutePythonScript=/absolute/path/to/Scripts/build_red_rock.py`, not `-run=pythonscript`: Epic's OBJ importer requires Slate. Generated OBJ source is written to ignored Intermediate output. The helper checks mesh orientation before rebuilding the level. The canyon and vehicle still use placeholder art.
