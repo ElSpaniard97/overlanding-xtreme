@@ -22,6 +22,9 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      - name: Record deployed browser version
+        run: |
+          node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync("dist/build-info.json", JSON.stringify({commit:process.env.GITHUB_SHA,builtAt:new Date().toISOString(),edition:"browser"},null,2));'
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

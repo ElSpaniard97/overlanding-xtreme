@@ -3,6 +3,9 @@
   "EngineAssociation": "5.8",
   "Category": "Games",
   "Description": "Overlanding Xtreme: offroad vehicle prototype",
+  "Modules": [
+    { "Name": "OverlandingXtreme", "Type": "Runtime", "LoadingPhase": "Default" }
+  ],
   "Plugins": [
     {
       "Name": "GameInputWindows",

@@ -11,3 +11,10 @@ unreal/**/Saved/
 unreal/**/DerivedDataCache/
 unreal/**/__pycache__/
 unreal/**/*.pyc
+
+# Fab source content and scanned development maps remain local.
+unreal/OverlandingXtreme/Content/LocalOnly/
+unreal/OverlandingXtreme/Content/Licensed/*
+!unreal/OverlandingXtreme/Content/Licensed/Toyota4Runner/
+unreal/OverlandingXtreme/Content/Licensed/Toyota4Runner/*
+!unreal/OverlandingXtreme/Content/Licensed/Toyota4Runner/Prepared/
