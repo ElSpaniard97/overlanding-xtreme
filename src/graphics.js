@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {createGroundMaterial} from './ground.js';
 import {trailX,trailHeight} from './game.js';
 export {surfaceHeight} from './terrain.js';
 import {surfaceHeight,alternateX,obstacles} from './terrain.js';
@@ -11,7 +12,8 @@ export function makeTexture(kind){
   const texture=new THREE.CanvasTexture(canvas);texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=4;return texture;
 }
 export function enhanceWorld(scene,car,ground,rockMats,renderer){
-  const dirt=makeTexture('dirt');dirt.repeat.set(90,260);ground.material.map=dirt;ground.material.bumpMap=dirt;ground.material.bumpScale=.2;ground.material.needsUpdate=true;
+  ground.material.dispose();ground.material=createGroundMaterial();
+  const uv=ground.geometry.attributes.uv,pos=ground.geometry.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,pos.getX(i)/12,pos.getZ(i)/12);uv.needsUpdate=true;
   const rock=makeTexture('rock');rockMats.forEach(m=>{m.map=rock;m.bumpMap=rock;m.bumpScale=.22;m.needsUpdate=true;});
   const sky=new THREE.Mesh(new THREE.SphereGeometry(2100,48,32),new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,uniforms:{sunDirection:{value:new THREE.Vector3(-.38,.12,-1).normalize()}},vertexShader:`varying vec3 direction; void main(){direction=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,fragmentShader:`varying vec3 direction;uniform vec3 sunDirection;
     float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}

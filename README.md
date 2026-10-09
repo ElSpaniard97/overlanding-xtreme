@@ -84,3 +84,12 @@ procedural scenery remains available if model loading fails.
 To regenerate from the locally downloaded sources in `.tools/assets/sketchfab-environment`,
 run `node scripts/prepare-web-environment.mjs`. Raw source downloads are excluded
 from the repository.
+
+### Ground and ride refinement
+
+Ground shading combines generated gravel, mineral grains, erosion cracks, bump
+detail and broad color variation, with denser geometry around the driving corridor.
+The vehicle body averages its wheel footprint and uses critically damped vertical
+suspension, smooth heading/pitch/roll and smaller simulation substeps. The chase
+camera stays behind the vehicle when reversing. Eastern bank height transitions
+and loose-ground speed reductions are continuous.

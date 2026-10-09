@@ -24,7 +24,9 @@ export function updateState(s, input, dt) {
   if(!input.brake&&Math.abs(s.speed)>.15)s.speed-=grade*3.5*dt;
   s.speed *= Math.exp(-(input.brake ? 7 : offroad ? (s.locked ? .35 : .7) : throttle ? .12 : .55) * dt);
   if(Math.abs(s.speed)<.04) s.speed=0;
-  s.speed = Math.max(-7, Math.min(maxSpeed * (offroad ? .6 : 1), s.speed));
+  const limit=maxSpeed*(offroad?.6:1);
+  if(s.speed>limit)s.speed=Math.max(limit,s.speed-6*dt);
+  s.speed=Math.max(-7,s.speed);
   const steerInput=((input.d ? 1 : 0) - (input.a ? 1 : 0));
   const maxSteer=.5/(1+Math.abs(s.speed)*.035);
   s.steering += (steerInput*maxSteer-s.steering)*(1-Math.exp(-dt*8));
@@ -63,8 +65,8 @@ export function interact(s) {
 
 // Substeps preserve elapsed movement on slower rendering frames.
 export function updateFrame(state,input,dt){
-  for(let remaining=Math.min(.25,Math.max(0,dt));remaining>1e-8;remaining-=.05)
-    updateState(state,input,Math.min(.05,remaining));
+  for(let remaining=Math.min(.25,Math.max(0,dt));remaining>1e-8;remaining-=.01)
+    updateState(state,input,Math.min(.01,remaining));
 }
 
 export function recover(s){
