@@ -1,11 +1,7 @@
 import * as THREE from 'three';
 import {trailX,trailHeight} from './game.js';
-export function surfaceHeight(x,z){
-  const side=x-trailX(z),shoulder=Math.max(0,Math.abs(side)-11);
-  const rockiness=Math.sin(x*.16+z*.12)*Math.cos(z*.18)*Math.min(1.3,shoulder*.12);
-  const rise=side>35?THREE.MathUtils.lerp(Math.min(18,shoulder*.08),-15,THREE.MathUtils.smoothstep(side,35,130)):Math.min(22,shoulder*.14);
-  return trailHeight(z)+rise+rockiness;
-}
+export {surfaceHeight} from './terrain.js';
+import {surfaceHeight,alternateX,obstacles} from './terrain.js';
 export function makeTexture(kind){
   const canvas=document.createElement('canvas');canvas.width=canvas.height=512;
   const c=canvas.getContext('2d');let seed=71;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
@@ -27,9 +23,9 @@ export function enhanceWorld(scene,car,ground,rockMats,renderer){
   let seed=102;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};const dummy=new THREE.Object3D();
   const stones=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,1),new THREE.MeshStandardMaterial({color:'#94775b',map:rock,roughness:1}),3200);
   for(let i=0;i<3200;i++){const z=rnd()*1750-80,x=trailX(z)+(rnd()-.5)*65;const size=.05+rnd()*.28;dummy.position.set(x,surfaceHeight(x,z)+size*.2,-z);dummy.rotation.set(rnd()*3,rnd()*6,rnd());dummy.scale.set(size*1.5,size*.6,size);dummy.updateMatrix();stones.setMatrixAt(i,dummy.matrix);}stones.receiveShadow=true;scene.add(stones);
-  const needles=new THREE.InstancedMesh(new THREE.ConeGeometry(1,1,9),new THREE.MeshStandardMaterial({color:'#526344',roughness:1}),1100);
+  const needles=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,1),new THREE.MeshStandardMaterial({color:'#526344',roughness:1}),1100);
   const trunks=new THREE.InstancedMesh(new THREE.CylinderGeometry(.12,.2,1,7),new THREE.MeshStandardMaterial({color:'#685440',roughness:1}),220);
-  for(let i=0;i<220;i++){const z=rnd()*1700-60,side=rnd()>.25?-1:1,x=trailX(z)+side*(20+rnd()*(side<0?115:40));const h=3+rnd()*7,y=surfaceHeight(x,z);dummy.position.set(x,y+h*.42,-z);dummy.scale.set(h*.12,h*.84,h*.12);dummy.rotation.set(0,0,0);dummy.updateMatrix();trunks.setMatrixAt(i,dummy.matrix);for(let k=0;k<5;k++){const size=h*(.32-k*.047);dummy.position.set(x,y+h*(.35+k*.13),-z);dummy.scale.set(size,h*.45,size);dummy.rotation.y=rnd()*6;dummy.updateMatrix();needles.setMatrixAt(i*5+k,dummy.matrix);}}needles.castShadow=true;trunks.castShadow=true;scene.add(needles,trunks);
+  for(let i=0;i<220;i++){const z=rnd()*1700-60,side=rnd()>.25?-1:1,x=trailX(z)+side*(55+rnd()*(side<0?115:40));const h=3+rnd()*7,y=surfaceHeight(x,z);dummy.position.set(x,y+h*.42,-z);dummy.scale.set(h*.12,h*.84,h*.12);dummy.rotation.set(0,0,0);dummy.updateMatrix();trunks.setMatrixAt(i,dummy.matrix);for(let k=0;k<5;k++){const size=h*(.32-k*.047);dummy.position.set(x,y+h*(.35+k*.13),-z);dummy.scale.set(size,h*.45,size);dummy.rotation.y=rnd()*6;dummy.updateMatrix();needles.setMatrixAt(i*5+k,dummy.matrix);}}needles.castShadow=true;trunks.castShadow=true;scene.add(needles,trunks);
   // Trail tire ruts follow the route rather than a flat overlay.
   for(const side of [-1,1]){const vertices=[],indices=[];for(let z=-40,i=0;z<=1540;z+=2,i++){for(const offset of [-.16,.16]){const x=trailX(z)+side*.84+offset;vertices.push(x,trailHeight(z)+.025,-z);}if(i>0){const a=i*2;indices.push(a-2,a-1,a,a-1,a+1,a);}}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setIndex(indices);g.computeVertexNormals();scene.add(new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:'#695039',transparent:true,opacity:.38,roughness:1,depthWrite:false})));}
   // Roof recovery boards, door seams, wheel treads and glowing tail lights.
@@ -43,4 +39,19 @@ export function enhanceWorld(scene,car,ground,rockMats,renderer){
   const camp=scene.children.find(o=>o.isGroup&&o.position.z===-1480);
   if(camp){const fabric=new THREE.MeshStandardMaterial({color:'#bd955d',roughness:1,side:THREE.DoubleSide});const canopy=new THREE.Mesh(new THREE.PlaneGeometry(7,5,4,3),fabric);canopy.rotation.x=-Math.PI/2;canopy.rotation.z=.08;canopy.position.set(1,4.3,1);camp.add(canopy);const poleMaterial=new THREE.MeshStandardMaterial({color:'#343a35',metalness:.4});for(const x of [-2.5,4.5])for(const z of [-1.5,3.5]){const pole=new THREE.Mesh(new THREE.CylinderGeometry(.045,.045,4.2,6),poleMaterial);pole.position.set(x,2.1,z);camp.add(pole);}const wire=[];for(let i=0;i<=16;i++){const x=-2.5+i*7/16,y=4.2-Math.sin(i/16*Math.PI)*.45;wire.push(new THREE.Vector3(x,y,3.5));if(i%2===0){const bulb=new THREE.Mesh(new THREE.SphereGeometry(.075,8,6),new THREE.MeshBasicMaterial({color:'#ffe2a0'}));bulb.position.set(x,y-.1,3.5);camp.add(bulb);}}camp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(wire),new THREE.LineBasicMaterial({color:'#272a25'})));}
   return {update(z){sky.position.z=-z;}};
+}
+
+export function addExpeditionDetails(scene){
+ const rockTexture=makeTexture('rock'),rockMat=new THREE.MeshStandardMaterial({color:'#af8059',map:rockTexture,bumpMap:rockTexture,bumpScale:.18,roughness:1});
+ const bark=new THREE.MeshStandardMaterial({color:'#554533',roughness:1}),leaves=new THREE.MeshStandardMaterial({color:'#596443',roughness:1});
+ for(const o of obstacles){const group=new THREE.Group();group.position.set(o.x,surfaceHeight(o.x,o.z),-o.z);scene.add(group);
+ if(o.type==='rock'){const g=new THREE.IcosahedronGeometry(o.radius,2);const p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),n=1+.12*Math.sin(x*8+y*3)*Math.cos(z*5);p.setXYZ(i,x*n,y*.85*n,z*n);}g.computeVertexNormals();const m=new THREE.Mesh(g,rockMat);m.position.y=o.radius*.45;m.castShadow=m.receiveShadow=true;group.add(m);}
+ else{const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.24,.45,4,8),bark);trunk.position.y=2;trunk.castShadow=true;group.add(trunk);for(let j=0;j<4;j++){const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(1.4-j*.2,1),leaves);crown.scale.set(1,1.5,1);crown.position.set(Math.sin(j)*.4,3+j*.7,Math.cos(j)*.4);crown.castShadow=true;group.add(crown);}}
+ }
+ // A continuous sandstone wall gives the close canyon a layered silhouette.
+ for(let z=50;z<1490;z+=40){const group=new THREE.Group();group.position.set(trailX(z)-65,surfaceHeight(trailX(z)-65,z)-2,-z);scene.add(group);for(let layer=0;layer<6;layer++){const g=new THREE.CylinderGeometry(17-layer*.8,20-layer*.8,4.2,15);const points=g.attributes.position;for(let i=0;i<points.count;i++){const x=points.getX(i),y=points.getY(i),pz=points.getZ(i),r=1+.065*Math.sin(x*.7+pz*.4+z)+.025*Math.cos(y*2+x);points.setXYZ(i,x*r,y+Math.sin(x*.8+pz)*.16,pz*r);}g.computeVertexNormals();const m=new THREE.Mesh(g,rockMat);m.position.set(-layer*.6,layer*3.8,0);m.scale.z=1.7;m.rotation.y=Math.sin(z)*.15;m.castShadow=m.receiveShadow=true;group.add(m);}}
+ const vertices=[],indices=[];for(let z=500,i=0;z<=780;z+=2,i++){for(const side of [-1,1]){const x=alternateX(z)+side*4;vertices.push(x,surfaceHeight(x,z)+.05,-z);}if(i){const n=i*2;indices.push(n-2,n-1,n,n-1,n+1,n);}}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setIndex(indices);g.computeVertexNormals();const detour=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:'#b59470',roughness:1,side:THREE.DoubleSide}));detour.receiveShadow=true;scene.add(detour);
+ for(const z of [490,785]){const sign=new THREE.Mesh(new THREE.BoxGeometry(1.8,.9,.12),new THREE.MeshStandardMaterial({color:'#e9b65b'}));sign.position.set(trailX(z)-7,trailHeight(z)+2,-z);scene.add(sign);const post=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,2,8),bark);post.position.set(sign.position.x,sign.position.y-1,sign.position.z);scene.add(post);}
+ return {detour};
 }

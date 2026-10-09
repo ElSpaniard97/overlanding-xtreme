@@ -1,0 +1,11 @@
+Model Information:
+* title:	Toyota_4runner
+* source:	https://sketchfab.com/3d-models/toyota-4runner-3afb8daa0a4a4bfea99e1af74eca1bdb
+* author:	sadiqminhas911 (https://sketchfab.com/sadiqminhas911)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Toyota_4runner" (https://sketchfab.com/3d-models/toyota-4runner-3afb8daa0a4a4bfea99e1af74eca1bdb) by sadiqminhas911 (https://sketchfab.com/sadiqminhas911) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
