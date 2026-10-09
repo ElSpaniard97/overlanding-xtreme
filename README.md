@@ -44,7 +44,7 @@ The GitHub Actions workflow tests, builds, and deploys to GitHub Pages on pushes
 
 Each Pages deployment writes `build-info.json` containing its Git commit and build time, so the live browser version can be checked against the repository. Unreal changes are published as project source and assets, separately from the Pages build.
 
-This is an initial stylized game prototype, not a photorealistic simulator. The vehicle is modeled from primitive geometry, and the terrain, vegetation, campsite, and map are generated locally. No external 3D models are required. Google Fonts enhance the interface when available; local font fallbacks remain usable offline. `assets/reference.png` preserves the user-supplied visual reference and is not used as the playable scene.
+This is a stylized game prototype. The browser edition combines optimized external vehicle and scenery models with generated terrain, campsite, and map graphics. Google Fonts enhance the interface when available; local font fallbacks remain usable offline. `assets/reference.png` preserves the user-supplied visual reference and is not used as the playable scene.
 
 ### Browser expedition update
 
@@ -68,3 +68,19 @@ To regenerate it from the locally acquired split source, run
 `node scripts/prepare-web-4runner.mjs`. Geometry simplification uses
 [glTF Transform](https://gltf-transform.dev/modules/functions/functions/simplify),
 and Three.js loads its [Meshopt compression](https://threejs.org/docs/pages/GLTFLoader.html).
+
+### Textured canyon scenery
+
+The browser edition uses **Desert Cliff 6** by WireframeArt and juniper and
+ponderosa models from **Mountain Trees** by Jagobo, licensed CC BY 4.0.
+[Source links and modification notices](public/models/environment/ATTRIBUTION.md)
+are also available through View Rig.
+
+The three optimized GLBs total approximately 3.1 MB. Meshopt compression,
+smaller textures, instancing, and distance-based visibility keep the scenery
+suitable for the browser. Trees preserve existing obstacle locations, and
+procedural scenery remains available if model loading fails.
+
+To regenerate from the locally downloaded sources in `.tools/assets/sketchfab-environment`,
+run `node scripts/prepare-web-environment.mjs`. Raw source downloads are excluded
+from the repository.

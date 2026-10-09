@@ -1,0 +1,59 @@
+[
+  {
+    "name": "desert-cliff",
+    "triangles": 5568,
+    "bytes": 1102196,
+    "bounds": {
+      "min": [
+        -0.8136575818061829,
+        0.00004023096146471561,
+        -0.7968714089706783
+      ],
+      "max": [
+        0.8136575818061829,
+        0.9999597690385353,
+        0.7968714089706783
+      ]
+    },
+    "author": "WireframeArt",
+    "source": "https://sketchfab.com/3d-models/desert-cliff-6-ed2e9c7e976e4768868481e4a5c63f6f"
+  },
+  {
+    "name": "juniper",
+    "triangles": 2628,
+    "bytes": 748072,
+    "bounds": {
+      "min": [
+        -0.3900808095932007,
+        0,
+        -0.3206333329079516
+      ],
+      "max": [
+        0.3900808095932007,
+        0.9999893597823516,
+        0.3206368171447844
+      ]
+    },
+    "author": "Jagobo",
+    "source": "https://sketchfab.com/3d-models/mountain-trees-b914384f931d4b3585bd4f0bf48f0da3"
+  },
+  {
+    "name": "ponderosa",
+    "triangles": 18724,
+    "bytes": 1245472,
+    "bounds": {
+      "min": [
+        -0.2582586176742781,
+        0,
+        -0.2558392262935027
+      ],
+      "max": [
+        0.2582586176742781,
+        1,
+        0.2558392262935027
+      ]
+    },
+    "author": "Jagobo",
+    "source": "https://sketchfab.com/3d-models/mountain-trees-b914384f931d4b3585bd4f0bf48f0da3"
+  }
+]

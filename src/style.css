@@ -21,3 +21,4 @@
 .trail-tools button:disabled{opacity:.4;cursor:default}
 @media(max-width:650px){#touch-controls{bottom:248px}.playing .objectives{width:220px}.playing .objectives h2{display:none}.playing .objectives ul{margin-top:10px}.playing .objectives li.done,.playing .objectives li:not(.done)~li{display:none}.playing .objectives .trail-progress{margin-top:12px}.playing .objectives{padding:12px}}
 @media(max-width:650px){.notification{top:265px}}
+#scenery-status{font-size:9px;letter-spacing:1px;color:#d6d3bb;margin-top:12px}
